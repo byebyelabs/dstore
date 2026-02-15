@@ -7,8 +7,8 @@ data_node_t* data_head = NULL;
 
 int main() {
   // Set up a server socket to accept incoming connections
-  // Will be assigned to a random port, so initialize to zero
-  unsigned short port = 0;
+  // Try to assign it to DEFAULT_STORAGE_PORT
+  unsigned short port = DEFAULT_STORAGE_PORT;
   int server_socket_fd = server_socket_open(&port);
   if (server_socket_fd == -1) {
     perror("failed to open port");
@@ -20,6 +20,8 @@ int main() {
   }
 
   printf("dstore storage node listening on port %d!\n", port);
+
+
 }
 
 void insert_data(data_node_t* data) {

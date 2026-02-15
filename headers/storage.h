@@ -1,6 +1,7 @@
 #pragma once
 
 #include "util.h"
+#define DEFAULT_STORAGE_PORT 42069
 
 /**
  * underlying data structure to hold data
