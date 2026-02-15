@@ -7,6 +7,9 @@ int main() {
   set("key", "value");
   set("key2", "another value");
   set("key", "not the original value");
+  set("key3", "even more values?");
+  set("key4", "does it keep going down?");
+  set("key5", "i think it does");
 
   printf("testing key2\n");
   const char* key2_value = get("key2");

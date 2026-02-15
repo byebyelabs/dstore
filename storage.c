@@ -24,16 +24,16 @@ void insert_data(data_node_t* data) {
       return;
     }
 
-    // data->hash > curr->hash
+    // data->hash < curr->hash
     // should insert here
-    if (cmp_result > 0) {
+    if (cmp_result < 0) {
       if (prev == NULL) data_head = data;
       else prev->next = data;
       data->next = curr;
       return;
     }
 
-    // otherwise data->hash < curr->hash
+    // otherwise data->hash > curr->hash
     // can't insert here, so continue
     prev = curr;
     curr = curr->next;
@@ -63,20 +63,21 @@ void set(const char* key, const char* value) {
   insert_data(new_data);
 }
 
-// // debug function for printing lists
-// void print_list() {
-//   data_node_t* curr = data_head;
-//   while (curr != NULL) {
-//     printf("key: <");
-//     for (int i = 0; i < HASH_LENGTH; i++) {
-//       printf("%02x", curr->hash[i]);
-//     }
-//     printf(">, value: < %s >, next: < %p >\n", curr->value, curr->next);
-//     curr = curr->next;
-//   }
-// }
+// debug function for printing lists
+void print_list() {
+  data_node_t* curr = data_head;
+  while (curr != NULL) {
+    printf("key: <");
+    for (int i = 0; i < HASH_LENGTH; i++) {
+      printf("%02x", curr->hash[i]);
+    }
+    printf(">, value: < %s >, next: < %p >\n", curr->value, curr->next);
+    curr = curr->next;
+  }
+}
 
 const char* get(const char* key) {
+  print_list();
   // hash key
   unsigned char hashed_key[HASH_LENGTH + 1] = { 0 };
   hash_string(key, hashed_key); 
