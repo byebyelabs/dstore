@@ -1,9 +1,9 @@
 #pragma once
 
 #include "util.h"
+#include "config.h"
 
 #define DEFAULT_STORAGE_PORT 42069
-#define LOG_PREFIX "dstore storage: "
 
 /**
  * Structs
