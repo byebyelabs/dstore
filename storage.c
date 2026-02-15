@@ -1,7 +1,10 @@
 #include "headers/storage.h"
 #include "headers/socket.h"
+#include "headers/message.h"
+
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 
 data_node_t* data_head = NULL;
 
@@ -19,9 +22,33 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  printf("dstore storage node listening on port %d!\n", port);
+  printf("%slistening on port %d!\n", LOG_PREFIX, port);
 
+  // spawn listener thread
+  pthread_t request_handler_thread;
+  pthread_create(&request_handler_thread, NULL, request_worker, (void*) (long) server_socket_fd);
 
+  // wait for listener thread
+  pthread_join(request_handler_thread, NULL);
+
+  return 0;
+}
+
+void* request_worker(void* input) {
+  printf("%swaiting for requests...\n", LOG_PREFIX); 
+  // cast input back to server_socket_fd
+  int server_socket_fd = (int) (long) input;
+
+  // repeatedly accept connections on server socket
+  int client_socket_fd;
+  while ((client_socket_fd = server_socket_accept(server_socket_fd)) != -1) {
+    const char* request = receive_message(client_socket_fd);
+
+    // TODO: just print out request for now until we decide on request structure
+    printf("%sreceived: < %s >\n", LOG_PREFIX, request);
+  }
+  
+  return NULL;
 }
 
 void insert_data(data_node_t* data) {

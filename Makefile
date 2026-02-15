@@ -11,7 +11,7 @@ all:
 
 storage: storage.c
 	@mkdir -p out
-	${CC} ${CFLAGS} -o out/storage storage.c util.c ${LIBS}
+	${CC} ${CFLAGS} -o out/storage storage.c util.c message.c ${LIBS}
 
 test: test.c storage.c
 	@mkdir -p out
