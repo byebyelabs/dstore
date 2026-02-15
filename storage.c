@@ -1,8 +1,26 @@
 #include "headers/storage.h"
+#include "headers/socket.h"
 #include <stdlib.h>
 #include <string.h>
 
 data_node_t* data_head = NULL;
+
+int main() {
+  // Set up a server socket to accept incoming connections
+  // Will be assigned to a random port, so initialize to zero
+  unsigned short port = 0;
+  int server_socket_fd = server_socket_open(&port);
+  if (server_socket_fd == -1) {
+    perror("failed to open port");
+    exit(EXIT_FAILURE);
+  }
+  if (listen(server_socket_fd, 1) == -1) {
+    perror("failed to listen on server socket");
+    exit(EXIT_FAILURE);
+  }
+
+  printf("dstore storage node listening on port %d!\n", port);
+}
 
 void insert_data(data_node_t* data) {
   if (data_head == NULL) {
