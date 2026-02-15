@@ -52,3 +52,11 @@ data_node_t* find_node_with_key(const char* key);
 
 // debug function for printing lists
 void print_list();
+
+// transfer all keys >= hash to target IP address + port
+// returns 0 on success, -1 on failure
+int transfer_keys(const char* ip_address, unsigned short port, unsigned char* hash);
+
+// handle incoming transfer message and store data
+// message format: "TRANSFER:<hash_hex>:<val_length><value>:<hash_hex>:<val_length><value>:..."
+void handle_transfer(const char* message);
