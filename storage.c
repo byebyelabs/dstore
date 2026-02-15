@@ -22,7 +22,7 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  printf("%slistening on port %d!\n", LOG_PREFIX, port);
+  printf("%slistening on port %d!\n", STORAGE_REGULAR_EVENT_LOG_PREFIX, port);
 
   // spawn listener thread
   pthread_t request_handler_thread;
@@ -35,7 +35,7 @@ int main() {
 }
 
 void* request_worker(void* input) {
-  printf("%swaiting for requests...\n", LOG_PREFIX); 
+  printf("%swaiting for requests...\n", STORAGE_REGULAR_EVENT_LOG_PREFIX); 
   // cast input back to server_socket_fd
   int server_socket_fd = (int) (long) input;
 
@@ -45,7 +45,7 @@ void* request_worker(void* input) {
     const char* request = receive_message(client_socket_fd);
 
     // TODO: just print out request for now until we decide on request structure
-    printf("%sreceived: < %s >\n", LOG_PREFIX, request);
+    printf("%sreceived: < %s >\n", STORAGE_REGULAR_EVENT_LOG_PREFIX, request);
   }
   
   return NULL;
