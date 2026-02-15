@@ -25,11 +25,22 @@ const char* get(const char* key);
 
 /**
  * deletes key
+ * returns 0 on success, -1 on failure to find node with key
  */
-void del(const char* key);
+int del(const char* key);
 
 /**
  * insert data into list, modifying pointer
  * data will be inserted in sorted order
  */
 void insert_data(data_node_t* data);
+
+/**
+ * finds data_node_t associated with key
+ */
+data_node_t* find_node_with_key(const char* key);
+
+/**
+ * debug function for printing lists
+ */
+void print_list();

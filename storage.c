@@ -77,7 +77,39 @@ void print_list() {
 }
 
 const char* get(const char* key) {
-  print_list();
+  // print_list();
+  data_node_t* node_with_key = find_node_with_key(key);
+
+  // not found, return NULL
+  return node_with_key != NULL ? node_with_key->value : NULL;
+}
+
+int del(const char* key) {
+  if (data_head == NULL) return -1;
+
+  unsigned char hashed_key[HASH_LENGTH + 1] = { 0 };
+  hash_string(key, hashed_key); 
+
+  data_node_t* prev = NULL;
+  data_node_t* curr = data_head;
+  while (curr != NULL) {
+    if (memcmp(hashed_key, curr->hash, HASH_LENGTH) == 0) {
+      // delete key
+      if (prev == NULL) data_head = curr->next;
+      else prev->next = curr->next;
+      free(curr->value);
+      free(curr);
+      return 0;
+    }
+    
+    prev = curr;
+    curr = curr->next;
+  }
+
+  return -1;
+}
+
+data_node_t* find_node_with_key(const char* key) {
   // hash key
   unsigned char hashed_key[HASH_LENGTH + 1] = { 0 };
   hash_string(key, hashed_key); 
@@ -87,7 +119,7 @@ const char* get(const char* key) {
   data_node_t* curr = data_head;
   while (curr != NULL) {
     if (memcmp(curr->hash, hashed_key, HASH_LENGTH) == 0) {
-      return curr->value;
+      return curr;
     }
 
     curr = curr->next;

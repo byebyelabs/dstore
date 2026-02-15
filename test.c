@@ -18,6 +18,11 @@ int main() {
   const char* key_value = get("key");
   assert(key_value != NULL && strcmp(key_value, "not the original value") == 0);
   printf("done\n");
+
+  print_list();
+  printf("deleting key\n");
+  assert(del("key") == 0);
+  print_list();
   
   return 0;
 }
