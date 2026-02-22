@@ -54,9 +54,9 @@ data_node_t* find_node_with_key(const char* key);
 void print_list();
 
 // transfer all keys >= hash to target IP address + port
-// returns 0 on success, -1 on failure
-int transfer_keys(const char* ip_address, unsigned short port, unsigned char* hash);
+// message format: "PREFIX:IP:PORT:<hash_hex>"
+void handle_transfer_request(const char* message);
 
 // handle incoming transfer message and store data
-// message format: "TRANSFER:<hash_hex>:<val_length><value>:<hash_hex>:<val_length><value>:..."
-void handle_transfer(const char* message);
+// message format: "PREFIX:<hash_hex>:<val_length><value>:<hash_hex>:<val_length><value>:..."
+void handle_incoming_transfer(const char* message);
