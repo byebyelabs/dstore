@@ -5,18 +5,30 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "headers/config.h"
+
 #define MAX_MESSAGE_LENGTH 1024
 
 // Send a across a socket with a header that includes the message length.
-int send_message(int fd, char* message) {
+int send_message(int fd, enum message_type type, char* message) {
   // If the message is NULL, set errno to EINVAL and return an error
   if (message == NULL) {
     errno = EINVAL;
     return -1;
   }
+  
+  size_t len = strlen(message) + MESSAGE_PREFIX_LENGTH + 1; // +1 for the colon separator
+  char full_message[MAX_MESSAGE_LENGTH];
+
+  snprintf(
+    full_message,
+    len + 1,
+    "%s:%s",
+    MESSAGE_PREFIXES[type],
+    message
+  );
 
   // First, send the length of the message in a size_t
-  size_t len = strlen(message);
   if (write(fd, &len, sizeof(size_t)) != sizeof(size_t)) {
     // Writing failed, so return an error
     return -1;
@@ -26,7 +38,7 @@ int send_message(int fd, char* message) {
   size_t bytes_written = 0;
   while (bytes_written < len) {
     // Try to write the entire remaining message
-    ssize_t rc = write(fd, message + bytes_written, len - bytes_written);
+    ssize_t rc = write(fd, full_message + bytes_written, len - bytes_written);
 
     // Did the write fail? If so, return an error
     if (rc <= 0) return -1;
