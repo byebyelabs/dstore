@@ -1,6 +1,7 @@
 #include "headers/storage.h"
 #include "headers/socket.h"
 #include "headers/message.h"
+#include "headers/util.h"
 
 data_node_t* data_head = NULL;
 
@@ -78,20 +79,27 @@ void print_list() {
 }
 
 // container functionalities for client commands
-void set(const char* key, const char* value) {
+void set(char* props) {
+  // SET message format: <KEY_HASH><VAL_LEN>#<VAL>
+  // key length is fixed at HASH_LENGTH
+  char* key = props;
+  char* value_len_str = props + HASH_LENGTH;
+  
+  size_t value_len = atoi(value_len_str);
+  char* value = value_len_str + strlen(value_len_str) + 1;
+
+  // terminate key string
+  key[HASH_LENGTH] = '\0';
+
   // copy value
-  size_t value_len = strlen(value) + 1;
   char* copied_value = (char*) malloc(sizeof(char) * value_len);
   strncpy(copied_value, value, value_len);
 
   // make new data_node_t
   data_node_t* new_data = (data_node_t*) malloc(sizeof(data_node_t));
-
-  // set value
+  strncpy(new_data->hash, key, HASH_LENGTH);
   new_data->value = copied_value;
-
-  // hash key
-  hash_string(key, new_data->hash);
+  new_data->value_len = value_len;
 
   // insert into list
   insert_data(new_data);
@@ -137,5 +145,4 @@ void handle_incoming_transfer(const char* message) {
 
 void handle_transfer_request(const char* message) {
   // TODO
-  return -1;
 }
