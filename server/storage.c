@@ -38,10 +38,27 @@ void* request_worker(void* input) {
   // repeatedly accept connections on server socket
   int client_socket_fd;
   while ((client_socket_fd = server_socket_accept(server_socket_fd)) != -1) {
-    const char* request = receive_message(client_socket_fd);
+    char* request = receive_message(client_socket_fd);
 
-    // TODO: just print out request for now until we decide on request structure
-    printf("%sreceived: < %s >\n", STORAGE_REGULAR_EVENT_LOG_PREFIX, request);
+    // Check MESSAGE_PREFIX_LENGTH characters to determine message type
+    char message_prefix[MESSAGE_PREFIX_LENGTH + 1];
+    strncpy(message_prefix, request, MESSAGE_PREFIX_LENGTH);
+    message_prefix[MESSAGE_PREFIX_LENGTH] = '\0';
+
+    char* request_props = request + MESSAGE_PREFIX_LENGTH;
+    if (strcmp(message_prefix, MESSAGE_PREFIXES[SET]) == 0) {
+      set(request_props);
+    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[GET]) == 0) {
+      get(request_props);
+    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[DEL]) == 0) {
+      del(request_props);
+    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[TRANSFER_REQ_FROM_SERVER]) == 0) {
+      handle_transfer_request(request_props);
+    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[TRANSFER_RESPONSE_FROM_CONTAINER]) == 0) {
+      handle_incoming_transfer(request_props);
+    }
+
+    free(request);
   }
   
   return NULL;
