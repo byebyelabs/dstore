@@ -1,4 +1,6 @@
 #include "headers/server.h"
+#include "headers/socket.h"
+#include "headers/message.h"
 
 #include <pthread.h>
 #include <stdio.h>
@@ -170,6 +172,16 @@ int leave_ring(storage_node_t *node) {
   return 0;
 }
 
+// helper for connecting to a storage node
+int connect_to_storage_node(storage_node_t *node) {
+  int fd = socket_connect(node->ip, node->port);
+  if (fd == -1) {
+    fprintf(stderr, "%sFailed to connect to storage node at %s:%d.\n",
+            SERVER_EVENTS_LOG_PREFIX, node->ip, node->port);
+  }
+  return fd;
+}
+
 // saves key-value pair to correct storage node
 int dstore_set(const char *key, const char *value) {
   // hash key to find target node
@@ -189,8 +201,26 @@ int dstore_set(const char *key, const char *value) {
     return -1;
   }
 
-  // TODO: connect to storage node and set value
+  char *payload = (char *)malloc(MAX_MESSAGE_LENGTH);
+  if (payload == NULL) {
+    fprintf(stderr, "%sSET failed: could not allocate memory for payload.\n",
+            SERVER_EVENTS_LOG_PREFIX);
+    return -1;
+  }
 
+  // SET format: "<KEY_HASH><VAL_LEN>#<VAL>
+  snprintf(payload, MAX_MESSAGE_LENGTH, "%s%zu#%s", key, strlen(value), value);
+  int fd = connect_to_storage_node(&target_node);
+  if (fd == -1) {
+    fprintf(stderr, "%sSET failed: could not connect to %s:%d.\n",
+            SERVER_EVENTS_LOG_PREFIX, target_node.ip, target_node.port);
+    free(payload);
+    return -1;
+  }
+
+  int rc = send_message(fd, SET, payload);
+  close(fd);
+  free(payload);
   return 0;
 }
 
@@ -213,9 +243,32 @@ int dstore_get(const char *key, char *value_buffer) {
     return -1;
   }
 
-  // TODO: connect to storage node and get value
-  // TODO: copy value to value_buffer
+  int fd = connect_to_storage_node(&target_node);
+  if (fd == -1) {
+    fprintf(stderr, "%sGET failed: could not connect to %s:%d.\n",
+            SERVER_EVENTS_LOG_PREFIX, target_node.ip, target_node.port);
+    return -1;
+  }
 
+  if (send_message(fd, GET, (char *)key) != 0) {
+    close(fd);
+    return -1;
+  }
+
+  // storage node replies with a VAL message: "VAL:<value>"
+  Message* response = receive_message(fd);
+  close(fd);
+  
+  if (response == NULL) return -1;
+  if (response->type != VAL) {
+    fprintf(stderr, "%sGET failed: expected VAL response, got %.3s.\n",
+      SERVER_EVENTS_LOG_PREFIX, response->body);
+      free(response);
+      return -1;
+    }
+    
+  strcpy(value_buffer, response->body);
+  free(response);
   return 0;
 }
 
@@ -237,7 +290,15 @@ int dstore_del(const char *key) {
             SERVER_EVENTS_LOG_PREFIX, key);
     return -1;
   }
+  
+  int fd = connect_to_storage_node(&target_node);
+  if (fd == -1) {
+    fprintf(stderr, "%sDEL failed: could not connect to %s:%d.\n",
+            SERVER_EVENTS_LOG_PREFIX, target_node.ip, target_node.port);
+    return -1;
+  }
 
-  // TODO: connect to storage node and delete key
-  return 0;
+  int rc = send_message(fd, DEL, (char *)key);
+  close(fd);
+  return rc;
 }
