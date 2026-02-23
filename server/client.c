@@ -34,7 +34,7 @@ void dget(char *key, char *value_out) {
   if (BALANCER_FD == -1) connect_to_balancer();
 
   if (send_message(BALANCER_FD, GET, (char *)key) != 0) {
-    return NULL;
+    return;
   }
 
   Message *resp = receive_message(BALANCER_FD);
@@ -51,7 +51,6 @@ void dget(char *key, char *value_out) {
 
   strcpy(value_out, resp->body);
   free(resp);
-  return value_out;
 }
 
 void ddel(char *key) {
