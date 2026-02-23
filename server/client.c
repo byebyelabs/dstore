@@ -14,7 +14,7 @@ const char *host = "localhost";
 uint16_t port = DEFAULT_BALANCER_PORT;
 int BALANCER_FD = -1;
 
-void connect() {;
+void connect_to_balancer() {;
   if ((BALANCER_FD = socket_connect((char *)host, port)) == -1) {
     perror("dstore: connect");
     exit(EXIT_FAILURE);
@@ -22,7 +22,7 @@ void connect() {;
 }
 
 void dset(char *key, char *value) {
-  if (BALANCER_FD == -1) connect();
+  if (BALANCER_FD == -1) connect_to_balancer();
 
   // body is "<key> <value>"
   char body[MAX_MESSAGE_LENGTH];
@@ -31,7 +31,7 @@ void dset(char *key, char *value) {
 }
 
 void dget(char *key, char *value_out) {
-  if (BALANCER_FD == -1) connect();
+  if (BALANCER_FD == -1) connect_to_balancer();
 
   if (send_message(BALANCER_FD, GET, (char *)key) != 0) {
     return NULL;
@@ -55,6 +55,6 @@ void dget(char *key, char *value_out) {
 }
 
 void ddel(char *key) {
-  if (BALANCER_FD == -1) connect();
+  if (BALANCER_FD == -1) connect_to_balancer();
   send_message(BALANCER_FD, DEL, key);
 }
