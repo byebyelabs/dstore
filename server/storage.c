@@ -5,17 +5,9 @@
 #include "headers/config.h"
 #include "workers/storage.c"
 
-int main(int argc, char *argv[]) {
+int main() {
   // Set up a server socket to accept incoming connections
-
-  // port must be passed in CLI
-  if (argc != 2) {
-    fprintf(stderr, "Usage: %s <port>\n", argv[0]);
-    exit(EXIT_FAILURE);
-  }
-
-  int port = atoi(argv[1]);
-
+  unsigned short port = 0;
   int server_socket_fd = server_socket_open(&port);
   if (server_socket_fd == -1) {
     perror("failed to open port");
