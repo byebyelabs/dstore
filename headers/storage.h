@@ -1,9 +1,9 @@
 #pragma once
 
 #include "util.h"
+#include "config.h"
 
 #define DEFAULT_STORAGE_PORT 42069
-#define LOG_PREFIX "dstore storage: "
 
 /**
  * Structs
@@ -13,6 +13,7 @@
 // linked list sorted by hash
 typedef struct data_node {
   unsigned char hash[HASH_LENGTH + 1];
+  size_t value_len;
   char* value;
   struct data_node* next;
 } data_node_t;
@@ -33,15 +34,15 @@ void* request_worker(void* input);
  */
 
 // set key value pair in storage node
-void set(const char* key, const char* value);
+void set(char* props);
 
 // get value from key
 // returns copy of value at key, should be freed
-const char* get(const char* key);
+const char* get(char* props);
 
 // deletes key
 // returns 0 on success, -1 on failure to find node with key
-int del(const char* key);
+int del(char* props);
 
 // insert data into list, modifying pointer
 // data will be inserted in sorted order
