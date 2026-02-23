@@ -121,8 +121,6 @@ int join_ring(storage_node_t *node) {
 
   printf("%sNode joined ring successfully.\n", SERVER_EVENTS_LOG_PREFIX);
 
-  // TODO: trigger data transfer from successor to node
-
   pthread_mutex_unlock(&ring_lock);
   return 0;
 }
@@ -140,8 +138,6 @@ int leave_ring(storage_node_t *node) {
     pthread_mutex_unlock(&ring_lock);
     return -1;
   }
-
-  // TODO: trigger data transfer to successor from node
 
   // Case 2: this was the last node left in the ring
   if (node->successor == node) {
