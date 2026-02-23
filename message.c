@@ -56,12 +56,14 @@ Message* receive_message(int fd) {
   size_t len;
   if (read(fd, &len, sizeof(size_t)) != sizeof(size_t)) {
     // Reading failed. Return an error
+    perror("reading issue");
     return NULL;
   }
 
   // Now make sure the message length is reasonable
   if (len > MAX_MESSAGE_LENGTH) {
     errno = EINVAL;
+    perror("message too long");
     return NULL;
   }
 
@@ -73,6 +75,7 @@ Message* receive_message(int fd) {
   ssize_t rc = read(fd, prefix, MESSAGE_PREFIX_LENGTH);
   if (rc != MESSAGE_PREFIX_LENGTH) {
     free(result);
+    perror("failed to read message prefix");
     return NULL;
   }
   prefix[MESSAGE_PREFIX_LENGTH] = '\0';
@@ -88,6 +91,7 @@ Message* receive_message(int fd) {
 
   if (result->type == -1) {
     // could not find a valid message type
+    perror("invalid message prefix");
     free(result);
     errno = EINVAL;
     return NULL;
@@ -100,6 +104,7 @@ Message* receive_message(int fd) {
   // discard ":"
   char discard;
   if (read(fd, &discard, 1) != 1) {
+    perror("failed to discard colon");
     free(result);
     return NULL;
   }
@@ -110,6 +115,7 @@ Message* receive_message(int fd) {
 
     // Did the read fail? If so, return an error
     if (rc <= 0) {
+      perror("reading failed");
       free(result);
       return NULL;
     }
