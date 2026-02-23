@@ -1,13 +1,21 @@
-#include "container_worker.c"
-
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
 
-int main() {
+#include "headers/config.h"
+#include "workers/storage.c"
+
+int main(int argc, char *argv[]) {
   // Set up a server socket to accept incoming connections
-  // Try to assign it to DEFAULT_STORAGE_PORT
-  unsigned short port = DEFAULT_STORAGE_PORT;
+
+  // port must be passed in CLI
+  if (argc != 2) {
+    fprintf(stderr, "Usage: %s <port>\n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
+
+  int port = atoi(argv[1]);
+
   int server_socket_fd = server_socket_open(&port);
   if (server_socket_fd == -1) {
     perror("failed to open port");
@@ -18,7 +26,7 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  printf("%slistening on port %d!\n", STORAGE_REGULAR_EVENT_LOG_PREFIX, port);
+  printf("%slistening on port %d!\n", STORAGE_EVENTS_LOG_PREFIX, port);
 
   // spawn listener thread
   pthread_t request_handler_thread;
@@ -31,31 +39,32 @@ int main() {
 }
 
 void* request_worker(void* input) {
-  printf("%swaiting for requests...\n", STORAGE_REGULAR_EVENT_LOG_PREFIX); 
+  printf("%swaiting for requests...\n", STORAGE_EVENTS_LOG_PREFIX); 
   // cast input back to server_socket_fd
   int server_socket_fd = (int) (long) input;
 
   // repeatedly accept connections on server socket
   int client_socket_fd;
   while ((client_socket_fd = server_socket_accept(server_socket_fd)) != -1) {
-    char* request = receive_message(client_socket_fd);
+    printf("%saccepted connection from client\n", STORAGE_EVENTS_LOG_PREFIX);
 
-    // Check MESSAGE_PREFIX_LENGTH characters to determine message type
-    char message_prefix[MESSAGE_PREFIX_LENGTH + 1];
-    strncpy(message_prefix, request, MESSAGE_PREFIX_LENGTH);
-    message_prefix[MESSAGE_PREFIX_LENGTH] = '\0';
+    Message* request = receive_message(client_socket_fd);
+    if (request == NULL) {
+      printf("%sfailed to receive message from client\n", STORAGE_EVENTS_LOG_PREFIX);
+      close(client_socket_fd);
+      continue;
+    }
 
-    char* request_props = request + MESSAGE_PREFIX_LENGTH;
-    if (strcmp(message_prefix, MESSAGE_PREFIXES[SET]) == 0) {
-      set(request_props);
-    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[DEL]) == 0) {
-      del(request_props);
-    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[GET]) == 0) {
-      // need to return to client
-      const char* value = get(request_props);
-      if (value != NULL) {
-        send_message(client_socket_fd, NIL, value);
-      }
+    if (request->type == SET) {
+      set(request->body);
+    } else if (request->type == DEL) {
+      del(request->body);
+    } else if (request->type == GET) {
+      // only request that requires a response
+      const char* value = get(request->body);
+      send_message(client_socket_fd, VAL, (value != NULL ? (char*) value : ""));
+    } else {
+      printf("%sshould be unreachable: #1\n", STORAGE_EVENTS_LOG_PREFIX);
     }
 
     free(request);
