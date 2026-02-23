@@ -3,6 +3,7 @@
 // Log Prefixes
 #define STORAGE_REGULAR_EVENT_LOG_PREFIX "dstore storage: "
 #define STORAGE_TRANSFER_EVENT_LOG_PREFIX "dstore transfer: "
+#define SERVER_EVENTS_LOG_PREFIX "dstore server: "
 
 #define MESSAGE_PREFIX_LENGTH 3
 

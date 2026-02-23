@@ -56,7 +56,7 @@ int find_successor(unsigned char *hash, storage_node_t *result) {
   storage_node_t *succ_ptr = _get_successor_ptr(hash);
 
   if (succ_ptr == NULL) {
-    fprintf(stderr, SERVER_LOG_PREFIX "ring is empty!\n");
+    fprintf(stderr, "%sring is empty!\n", SERVER_EVENTS_LOG_PREFIX);
     return -1;
   }
 
@@ -79,7 +79,7 @@ int find_predecessor(unsigned char *hash, storage_node_t *result) {
     return 0;
   }
 
-  fprintf(stderr, SERVER_LOG_PREFIX "predecessor not found!\n");
+  fprintf(stderr, "%spredecessor not found!\n", SERVER_EVENTS_LOG_PREFIX);
   return -1;
 }
 
@@ -97,7 +97,7 @@ int join_ring(storage_node_t *node) {
     node->predecessor = node;
     ring_head = node;
 
-    printf(SERVER_LOG_PREFIX "First node joined. Ring initialized.\n");
+    printf("%sFirst node joined. Ring initialized.\n", SERVER_EVENTS_LOG_PREFIX);
     pthread_mutex_unlock(&ring_lock);
     return 0;
   }
@@ -117,7 +117,7 @@ int join_ring(storage_node_t *node) {
     ring_head = node;
   }
 
-  printf(SERVER_LOG_PREFIX "Node joined ring successfully.\n");
+  printf("%sNode joined ring successfully.\n", SERVER_EVENTS_LOG_PREFIX);
 
   // TODO: trigger data transfer from successor to node
 
@@ -144,7 +144,7 @@ int leave_ring(storage_node_t *node) {
   // Case 2: this was the last node left in the ring
   if (node->successor == node) {
     ring_head = NULL;
-    printf(SERVER_LOG_PREFIX "Last node left. Ring is now empty.\n");
+    printf("%sLast node left. Ring is now empty.\n", SERVER_EVENTS_LOG_PREFIX);
   }
 
   // Case 3: there are other nodes left in the ring
@@ -164,7 +164,7 @@ int leave_ring(storage_node_t *node) {
   node->successor = NULL;
   node->predecessor = NULL;
 
-  printf(SERVER_LOG_PREFIX "Node removed from topology.\n");
+  printf("%sNode removed from topology.\n", SERVER_EVENTS_LOG_PREFIX);
 
   pthread_mutex_unlock(&ring_lock);
   return 0;
@@ -184,8 +184,8 @@ int dstore_set(const char *key, const char *value) {
 
   if (res != 0) {
     fprintf(stderr,
-            SERVER_LOG_PREFIX "SET failed: could not find node for key '%s'.\n",
-            key);
+            "%sSET failed: could not find node for key '%s'.\n",
+            SERVER_EVENTS_LOG_PREFIX, key);
     return -1;
   }
 
@@ -208,8 +208,8 @@ int dstore_get(const char *key, char *value_buffer) {
 
   if (res != 0) {
     fprintf(stderr,
-            SERVER_LOG_PREFIX "GET failed: could not find node for key '%s'.\n",
-            key);
+            "%sGET failed: could not find node for key '%s'.\n",
+            SERVER_EVENTS_LOG_PREFIX, key);
     return -1;
   }
 
@@ -233,8 +233,8 @@ int dstore_del(const char *key) {
 
   if (res != 0) {
     fprintf(stderr,
-            SERVER_LOG_PREFIX "DEL failed: could not find node for key '%s'.\n",
-            key);
+            "%sDEL failed: could not find node for key '%s'.\n",
+            SERVER_EVENTS_LOG_PREFIX, key);
     return -1;
   }
 

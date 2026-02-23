@@ -7,7 +7,6 @@
 #include <stdint.h>
 
 #define DEFAULT_SERVER_PORT DEFAULT_STORAGE_PORT
-#define SERVER_LOG_PREFIX "dstore server: "
 
 // Storage Node in the ring
 typedef struct storage_node {
