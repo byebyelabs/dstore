@@ -1,7 +1,7 @@
-#include "headers/storage.h"
-#include "headers/socket.h"
-#include "headers/message.h"
-#include "headers/util.h"
+#include "storage.h"
+#include "socket.h"
+#include "message.h"
+#include "util.h"
 
 data_node_t* data_head = NULL;
 

@@ -2,7 +2,7 @@
 #include <string.h>
 #include <pthread.h>
 
-#include "headers/config.h"
+#include "config.h"
 #include "workers/storage.c"
 
 int main() {

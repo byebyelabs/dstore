@@ -1,6 +1,6 @@
-#include "headers/server.h"
-#include "headers/socket.h"
-#include "headers/message.h"
+#include "server.h"
+#include "socket.h"
+#include "message.h"
 
 #include <pthread.h>
 #include <stdio.h>

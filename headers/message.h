@@ -1,6 +1,6 @@
 #pragma once
 
-#include "headers/config.h"
+#include "config.h"
 
 typedef struct {
     enum message_type type;

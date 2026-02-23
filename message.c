@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "headers/message.h"
+#include "message.h"
 
 char* MESSAGE_PREFIXES_ARR[] = MESSAGE_PREFIXES;
 

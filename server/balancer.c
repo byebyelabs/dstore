@@ -1,7 +1,7 @@
-#include "headers/server.h"
-#include "headers/socket.h"
-#include "headers/message.h"
-#include "headers/config.h"
+#include "server.h"
+#include "socket.h"
+#include "message.h"
+#include "config.h"
 
 
 void* handle_client(int fd) {
