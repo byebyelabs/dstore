@@ -18,7 +18,7 @@ int main() {
     exit(EXIT_FAILURE);
   }
 
-  printf("%slistening on port %d!\n", STORAGE_EVENTS_LOG_PREFIX, port);
+  printf("%slistening on port %d\n", STORAGE_EVENTS_LOG_PREFIX, port);
 
   // spawn listener thread
   pthread_t request_handler_thread;
