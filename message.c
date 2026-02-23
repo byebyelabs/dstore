@@ -7,7 +7,7 @@
 
 #include "headers/config.h"
 
-#define MAX_MESSAGE_LENGTH 1024
+char* MESSAGE_PREFIXES_ARR[] = MESSAGE_PREFIXES;
 
 // Send a across a socket with a header that includes the message length.
 int send_message(int fd, enum message_type type, char* message) {
@@ -24,7 +24,7 @@ int send_message(int fd, enum message_type type, char* message) {
     full_message,
     len + 1,
     "%s:%s",
-    MESSAGE_PREFIXES[type],
+    MESSAGE_PREFIXES_ARR[type],
     message
   );
 

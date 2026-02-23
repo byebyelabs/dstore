@@ -1,29 +1,24 @@
 #pragma once
 
+// Ports
+#define DEFAULT_BALANCER_PORT 42069
+
 // Log Prefixes
 #define STORAGE_REGULAR_EVENT_LOG_PREFIX "dstore storage: "
 #define STORAGE_TRANSFER_EVENT_LOG_PREFIX "dstore transfer: "
 #define SERVER_EVENTS_LOG_PREFIX "dstore server: "
 
 #define MESSAGE_PREFIX_LENGTH 3
+#define MAX_MESSAGE_LENGTH 1024
 
 // Message Types
 enum message_type {
-    NIL,
-    SET,
-    GET,
-    DEL,
-    TRANSFER_REQ_FROM_SERVER,
-    TRANSFER_RESPONSE_FROM_CONTAINER
+    SET,  // set key value pair
+    GET,  // get value for key
+    DEL,  // delete key
+    JOIN, // storage node joins the balancer
+    VAL,  // storage node returns a value
 };
 
-char* MESSAGE_PREFIXES[] = {
-    // MUST BE MESSAGE_PREFIX_LENGTH CHARACTERS LONG
-    // + IN THE SAME ORDER AS message_type_t
-    "", // need for type hackery
-    "SET",
-    "GET",
-    "DEL",
-    "TRF",
-    "TRR"
-};
+// In order of type, must be MESSAGE_PREFIX_LENGTH chars each
+#define MESSAGE_PREFIXES { "SET", "GET", "DEL", "JNS", "VAL" };
