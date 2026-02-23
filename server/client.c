@@ -22,22 +22,27 @@ void connect_to_balancer() {;
 }
 
 void dset(char *key, char *value) {
-  if (BALANCER_FD == -1) connect_to_balancer();
+  connect_to_balancer();
 
   // body is "<key> <value>"
   char body[MAX_MESSAGE_LENGTH];
   snprintf(body, sizeof(body), "%s %s", key, value);
   send_message(BALANCER_FD, SET, body);
+
+  close(BALANCER_FD);
 }
 
 void dget(char *key, char *value_out) {
-  if (BALANCER_FD == -1) connect_to_balancer();
+  connect_to_balancer();
 
   if (send_message(BALANCER_FD, GET, (char *)key) != 0) {
+    close(BALANCER_FD);
     return;
   }
 
   Message *resp = receive_message(BALANCER_FD);
+  close(BALANCER_FD);
+
   if (resp == NULL) {
     perror("dstore_get: receive_message got NULL");
     return;
@@ -54,6 +59,7 @@ void dget(char *key, char *value_out) {
 }
 
 void ddel(char *key) {
-  if (BALANCER_FD == -1) connect_to_balancer();
+  connect_to_balancer();
   send_message(BALANCER_FD, DEL, key);
+  close(BALANCER_FD);
 }
