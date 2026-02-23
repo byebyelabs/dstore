@@ -7,12 +7,13 @@
 #include <stdint.h>
 
 #define DEFAULT_SERVER_PORT DEFAULT_STORAGE_PORT
+#define MAX_IP_STR_LEN 16
 
 // Storage Node in the ring
 typedef struct storage_node {
   unsigned char hash[HASH_LENGTH];
-  char ip[16];                    // e.g. "10.0.0.1"
-  uint16_t port;                  // e.g. 8001
+  char ip[MAX_IP_STR_LEN];        // e.g. "localhost"
+  uint16_t port;                  // e.g. 8501
   struct storage_node *successor; // next node in ring (sorted by hash)
   struct storage_node *predecessor;
 } storage_node_t;
