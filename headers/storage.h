@@ -10,7 +10,7 @@
 // underlying data structure to hold data
 // linked list sorted by hash
 typedef struct data_node {
-  unsigned char hash[HASH_LENGTH + 1];
+  char hash[HASH_LENGTH + 1];
   size_t value_len;
   char* value;
   struct data_node* next;
