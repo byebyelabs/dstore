@@ -8,6 +8,7 @@
 
 // Message Types
 enum message_type {
+    NIL,
     SET,
     GET,
     DEL,
@@ -18,6 +19,7 @@ enum message_type {
 char* MESSAGE_PREFIXES[] = {
     // MUST BE MESSAGE_PREFIX_LENGTH CHARACTERS LONG
     // + IN THE SAME ORDER AS message_type_t
+    "", // need for type hackery
     "SET",
     "GET",
     "DEL",

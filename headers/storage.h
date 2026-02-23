@@ -13,6 +13,7 @@
 // linked list sorted by hash
 typedef struct data_node {
   unsigned char hash[HASH_LENGTH + 1];
+  size_t value_len;
   char* value;
   struct data_node* next;
 } data_node_t;
@@ -33,15 +34,15 @@ void* request_worker(void* input);
  */
 
 // set key value pair in storage node
-void set(const char* key, const char* value);
+void set(char* props);
 
 // get value from key
 // returns copy of value at key, should be freed
-const char* get(const char* key);
+const char* get(char* props);
 
 // deletes key
 // returns 0 on success, -1 on failure to find node with key
-int del(const char* key);
+int del(char* props);
 
 // insert data into list, modifying pointer
 // data will be inserted in sorted order
@@ -52,11 +53,3 @@ data_node_t* find_node_with_key(const char* key);
 
 // debug function for printing lists
 void print_list();
-
-// transfer all keys >= hash to target IP address + port
-// message format: "PREFIX:IP:PORT:<hash_hex>"
-void handle_transfer_request(const char* message);
-
-// handle incoming transfer message and store data
-// message format: "PREFIX:<hash_hex>:<val_length><value>:<hash_hex>:<val_length><value>:..."
-void handle_incoming_transfer(const char* message);

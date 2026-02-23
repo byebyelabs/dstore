@@ -105,19 +105,20 @@ void set(char* props) {
   insert_data(new_data);
 }
 
-const char* get(const char* key) {
-  // print_list();
-  data_node_t* node_with_key = find_node_with_key(key);
+const char* get(char* props) {
+  // GET message format: <KEY_HASH>
+  data_node_t* node_with_key = find_node_with_key(props);
 
   // not found, return NULL
   return node_with_key != NULL ? node_with_key->value : NULL;
 }
 
-int del(const char* key) {
+int del(char* props) {
+  // DEL message format: <KEY_HASH>
   if (data_head == NULL) return -1;
 
   unsigned char hashed_key[HASH_LENGTH + 1] = { 0 };
-  hash_string(key, hashed_key); 
+  hash_string(props, hashed_key); 
 
   data_node_t* prev = NULL;
   data_node_t* curr = data_head;
@@ -136,13 +137,4 @@ int del(const char* key) {
   }
 
   return -1;
-}
-
-// container functionalities for C2C transfers
-void handle_incoming_transfer(const char* message) {
-  // TODO
-}
-
-void handle_transfer_request(const char* message) {
-  // TODO
 }

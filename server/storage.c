@@ -1,4 +1,4 @@
-#include "container.c"
+#include "container_worker.c"
 
 #include <stdlib.h>
 #include <string.h>
@@ -48,14 +48,14 @@ void* request_worker(void* input) {
     char* request_props = request + MESSAGE_PREFIX_LENGTH;
     if (strcmp(message_prefix, MESSAGE_PREFIXES[SET]) == 0) {
       set(request_props);
-    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[GET]) == 0) {
-      get(request_props);
     } else if (strcmp(message_prefix, MESSAGE_PREFIXES[DEL]) == 0) {
       del(request_props);
-    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[TRANSFER_REQ_FROM_SERVER]) == 0) {
-      handle_transfer_request(request_props);
-    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[TRANSFER_RESPONSE_FROM_CONTAINER]) == 0) {
-      handle_incoming_transfer(request_props);
+    } else if (strcmp(message_prefix, MESSAGE_PREFIXES[GET]) == 0) {
+      // need to return to client
+      const char* value = get(request_props);
+      if (value != NULL) {
+        send_message(client_socket_fd, NIL, value);
+      }
     }
 
     free(request);
