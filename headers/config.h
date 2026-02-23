@@ -9,6 +9,7 @@
 
 #define MESSAGE_PREFIX_LENGTH 3
 #define MAX_MESSAGE_LENGTH 1024
+#define MAX_VALUE_LENGTH 900 // conservative bound to fit in length
 
 // Message Types
 enum message_type {
