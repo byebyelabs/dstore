@@ -86,6 +86,11 @@ void set(char* props) {
   char* value_len_str = props + HASH_LENGTH;
   
   size_t value_len = atoi(value_len_str);
+  if (value_len > MAX_MESSAGE_LENGTH) {
+    fprintf(stderr, "%sinvalid value length: %zu; aborting\n", STORAGE_EVENTS_LOG_PREFIX, value_len);
+    return;
+  }
+
   char* value = value_len_str + strlen(value_len_str) + 1;
 
   // terminate key string
