@@ -15,7 +15,19 @@ void* handle_client(int fd) {
   if (msg->type == SET) {
     // user will separate key and value with ' '
     char *key = body;
-    char *value = strtok(body, " ");
+    int space = 0;
+
+    while (body[space] != ' ' && body[space] != '\0') space++;
+    if (body[space] == '\0') {
+      fprintf(stderr, "%sinvalid SET message body: expected 'key value', got '%s'\n",
+              SERVER_EVENTS_LOG_PREFIX, body);
+      free(msg);
+      close(fd);
+      return NULL;
+    }
+
+    key[space] = '\0';
+    char *value = body + space + 1;
 
     dstore_set(key, value);
   } else if (msg->type == GET) {
@@ -35,14 +47,9 @@ void* handle_client(int fd) {
 
 int main(int argc, char *argv[]) {
 
-  int num_storage_nodes = 2;
-  if (argc > 2) {
-    fprintf(stderr, "Usage: %s ?num_storage_nodes[default:2]\n", argv[0]);
+  if (argc < 2) {
+    fprintf(stderr, "  Usage: %s [host1:port1 ...] (one required)\n", argv[0]);
     exit(EXIT_FAILURE);
-  }
-
-  if (argc == 2) {
-    num_storage_nodes = atoi(argv[1]);
   }
 
   unsigned short port = DEFAULT_BALANCER_PORT;
@@ -58,45 +65,43 @@ int main(int argc, char *argv[]) {
 
   printf("%sbalancer listening on port %d\n", SERVER_EVENTS_LOG_PREFIX, port);
 
-  // accept storage node registrations
-  while (num_storage_nodes--) {
-    // use server_socket_accept
-    int storage_node_socket_fd = server_socket_accept(server_fd);
-    if (storage_node_socket_fd == -1) {
-      perror("something went wrong with accept");
+  // connect to each storage node and register it in the ring
+  for (int i = 1; i < argc; i++) {
+    // parse "host:port" argument
+    char* host = argv[i];
+    int colon = 0;
+    while (host[colon] != ':' && host[colon] != '\0') colon++;
+
+    if (host[colon] == '\0') {
+      fprintf(stderr, "invalid storage node address: %s\n", host);
       continue;
     }
 
-    Message *msg = receive_message(storage_node_socket_fd);
-    if (msg == NULL) {
-      perror("something went wrong with receive_message");
-      close(storage_node_socket_fd);
+    host[colon] = '\0';
+    int port = atoi(host + colon + 1);
+
+    // verify we can reach the storage node
+    int fd = socket_connect(host, port);
+    if (fd == -1) {
+      fprintf(stderr, "%sfailed to connect to storage node at %s:%d\n",
+              SERVER_EVENTS_LOG_PREFIX, host, port);
       continue;
     }
+    close(fd);
 
-    if (msg->type != JOIN) {
-      fprintf(stderr, "%sunexpected message type during join phase: %.3s\n",
-              SERVER_EVENTS_LOG_PREFIX, msg->body);
-      free(msg);
-      close(storage_node_socket_fd);
-      continue;
-    }
-
-    // Message body format: "<IP>:<PORT>"
-    char *ip = msg->body;
-    char *port = strtok(msg->body, ":"); // trust this will come thru
-    
-    size_t ip_len = strlen(ip);
-    ip[ip_len] = '\0';
-
-    // add node to ring
+    // build storage_node_t and hash it by "host:port"
     storage_node_t *node = malloc(sizeof(storage_node_t));
-    strncpy(node->ip, ip, MAX_IP_STR_LEN);
-    node->port = (uint16_t)atoi(port);
-    
-    // successor and predecessor will be set in join_ring
+    strncpy(node->ip, host, MAX_IP_STR_LEN - 1);
+    node->ip[MAX_IP_STR_LEN - 1] = '\0';
+    node->port = port;
+
+    char node_id[MAX_IP_STR_LEN + 8];
+    snprintf(node_id, sizeof(node_id), "%s:%d", node->ip, node->port);
+    hash_string(node_id, node->hash);
+
     join_ring(node);
-    free(msg);
+    printf("%sregistered storage node at %s:%d\n",
+           SERVER_EVENTS_LOG_PREFIX, node->ip, port);
   }
 
   // nodes are ready to store, now listen for client requests
