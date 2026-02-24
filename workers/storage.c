@@ -94,8 +94,10 @@ void set(char* props) {
   key[HASH_LENGTH] = '\0';
 
   // copy value
-  char* copied_value = (char*) malloc(sizeof(char) * value_len);
+  // another issue here: need to null terminate
+  char* copied_value = (char*) malloc(sizeof(char) * (value_len + 1));
   strncpy(copied_value, value, value_len);
+  copied_value[value_len] = '\0';
 
   // make new data_node_t
   data_node_t* new_data = (data_node_t*) malloc(sizeof(data_node_t));
