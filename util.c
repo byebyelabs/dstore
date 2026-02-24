@@ -10,7 +10,7 @@ int hash_cmp(const unsigned char *a, const unsigned char *b) {
   return memcmp(a, b, HASH_LENGTH);
 }
 
-void print_hash_hex(const unsigned char *hash) {
+void print_hash_hex(unsigned char *hash) {
   for (int i = 0; i < HASH_LENGTH; i++) {
     printf("%02x", hash[i]);
   }

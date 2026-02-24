@@ -17,4 +17,4 @@ int hash_cmp(const unsigned char *a, const unsigned char *b);
 /**
  * prints hash in hex format
  */
-void print_hash_hex(const unsigned char *hash);
+void print_hash_hex(unsigned char *hash);
