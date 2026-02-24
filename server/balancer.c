@@ -6,6 +6,9 @@
 
 void* handle_client(int fd) {
   Message *msg = receive_message(fd);
+  printf("%sReceived message of %d with body '%s'\n",
+         SERVER_EVENTS_LOG_PREFIX, msg->type, msg->body);
+
   if (msg == NULL) {
     close(fd);
     return NULL;
@@ -87,6 +90,10 @@ int main(int argc, char *argv[]) {
               SERVER_EVENTS_LOG_PREFIX, host, port);
       continue;
     }
+
+    // send a blank message so the storage node read does not panic
+    send_message(fd, JOIN, "hello!");
+
     close(fd);
 
     // build storage_node_t and hash it by "host:port"
