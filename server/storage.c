@@ -20,6 +20,15 @@ int main() {
 
   printf("%slistening on port %d\n", STORAGE_EVENTS_LOG_PREFIX, port);
 
+  // write port to file so for auto discovery by balancer
+  FILE* port_file = fopen(".storage_ports", "a");
+  if (port_file == NULL) {
+    perror("failed to open .storage_ports file");
+    exit(EXIT_FAILURE);
+  }
+  fprintf(port_file, "localhost:%d ", port);
+  fclose(port_file);
+
   // spawn listener thread
   pthread_t request_handler_thread;
   pthread_create(&request_handler_thread, NULL, request_worker, (void*) (long) server_socket_fd);
