@@ -44,7 +44,7 @@ void dget(char *key, char *value_out) {
   close(BALANCER_FD);
 
   if (resp == NULL) {
-    perror("dstore_get: receive_message got NULL");
+    value_out[0] = '\0'; // set to empty string on failure
     return;
   }
 
