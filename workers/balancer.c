@@ -205,7 +205,10 @@ int dstore_set(const char *key, const char *value) {
   }
 
   // SET format: "<KEY_HASH><VAL_LEN>#<VAL>
-  snprintf(payload, MAX_MESSAGE_LENGTH, "%s%zu#%s", key, strlen(value), value);
+  unsigned char key_hash_str[HASH_LENGTH + 1];
+  hash_string(key, key_hash_str);
+
+  snprintf(payload, MAX_MESSAGE_LENGTH, "%s%zu#%s", key_hash_str, strlen(value), value);
   int fd = connect_to_storage_node(&target_node);
   if (fd == -1) {
     fprintf(stderr, "%sSET failed: could not connect to %s:%d.\n",
