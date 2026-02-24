@@ -58,6 +58,8 @@ void* request_worker(void* input) {
       // only request that requires a response
       const char* value = get(request->body);
       send_message(client_socket_fd, VAL, (value != NULL ? (char*) value : ""));
+    } else if (request->type == JOIN) {
+      // safely ignore, just for balancer to verify connection
     } else {
       printf("%sshould be unreachable: #1\n", STORAGE_EVENTS_LOG_PREFIX);
     }
