@@ -23,3 +23,18 @@ storage: server/storage.c util.c message.c
 client: server/client.c message.c
 	@mkdir -p out
 	${CC} ${CFLAGS} -o out/client test.c server/client.c message.c ${LIBS}
+
+spawn:
+	@make
+	@rm -f .storage_ports
+	@touch .storage_ports
+	@./out/storage &
+	@./out/storage &
+	@./out/storage &
+	@sleep 1
+	./out/balancer $$(cat .storage_ports)
+
+# Citation: https://stackoverflow.com/a/8987063
+kill:
+	pkill -f out/storage
+	rm -f .storage_ports
