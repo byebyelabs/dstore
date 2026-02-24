@@ -38,3 +38,7 @@ spawn:
 kill:
 	pkill -f out/storage
 	rm -f .storage_ports
+
+test:
+	@make client
+	./out/client
