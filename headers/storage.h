@@ -47,7 +47,7 @@ int del(char* props);
 void insert_data(data_node_t* data);
 
 // finds data_node_t associated with key
-data_node_t* find_node_with_key(const char* key);
+data_node_t* find_node_with_key(char* key);
 
 // debug function for printing lists
 void print_list();

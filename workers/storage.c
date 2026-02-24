@@ -45,16 +45,12 @@ void insert_data(data_node_t* data) {
   prev->next = data;
 }
 
-data_node_t* find_node_with_key(const char* key) {
-  // hash key
-  unsigned char hashed_key[HASH_LENGTH + 1] = { 0 };
-  hash_string(key, hashed_key); 
-
+data_node_t* find_node_with_key(char* key) {
   // find data_node_t
   // naive linear search (for now)
   data_node_t* curr = data_head;
   while (curr != NULL) {
-    if (memcmp(curr->hash, hashed_key, HASH_LENGTH) == 0) {
+    if (memcmp(curr->hash, key, HASH_LENGTH) == 0) {
       return curr;
     }
 
