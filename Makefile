@@ -2,7 +2,7 @@
 include .env
 
 CC := clang
-CFLAGS := -g -Wall -Werror -Wno-unused-function -Wno-unused-variable -I. -I./headers -I${OPENSSL_PATH}/include
+CFLAGS := -g -Wall -Werror -fsanitize=address -Wno-unused-function -Wno-unused-variable -I. -I./headers -I${OPENSSL_PATH}/include
 # you should have libcrypto from openssl.
 # we need it for md5 hashing.
 LIBS := -lcrypto -L${OPENSSL_PATH}/lib
