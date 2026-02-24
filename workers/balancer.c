@@ -249,7 +249,7 @@ int dstore_get(const char *key, char *value_buffer) {
     return -1;
   }
 
-  if (send_message(fd, GET, (char *)key) != 0) {
+  if (send_message(fd, GET, (char *)key_hash) != 0) {
     close(fd);
     return -1;
   }
