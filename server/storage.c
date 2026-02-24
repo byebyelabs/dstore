@@ -46,6 +46,9 @@ void* request_worker(void* input) {
       close(client_socket_fd);
       continue;
     }
+    
+    printf("%sreceived message of type %d with body '%s'\n",
+           STORAGE_EVENTS_LOG_PREFIX, request->type, request->body);
 
     if (request->type == SET) {
       set(request->body);
