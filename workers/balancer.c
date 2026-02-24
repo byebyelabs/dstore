@@ -207,6 +207,7 @@ int dstore_set(const char *key, const char *value) {
   // SET format: "<KEY_HASH><VAL_LEN>#<VAL>
   unsigned char key_hash_str[HASH_LENGTH + 1];
   hash_string(key, key_hash_str);
+  key_hash_str[HASH_LENGTH] = '\0';
 
   snprintf(payload, MAX_MESSAGE_LENGTH, "%s%zu#%s", key_hash_str, strlen(value), value);
   int fd = connect_to_storage_node(&target_node);
@@ -249,7 +250,13 @@ int dstore_get(const char *key, char *value_buffer) {
     return -1;
   }
 
-  if (send_message(fd, GET, (char *)key_hash) != 0) {
+  // THIS IS WHAT CAUSED SEGV BRUUUHH
+  // key hash was not terminated bc its raw
+  unsigned char key_hash_str[HASH_LENGTH + 1];
+  memcpy(key_hash_str, key_hash, HASH_LENGTH);
+  key_hash_str[HASH_LENGTH] = '\0';
+
+  if (send_message(fd, GET, (char *)key_hash_str) != 0) {
     close(fd);
     return -1;
   }
