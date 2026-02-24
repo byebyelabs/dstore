@@ -70,9 +70,7 @@ void print_list() {
   data_node_t* curr = data_head;
   while (curr != NULL) {
     printf("key: <");
-    for (int i = 0; i < HASH_LENGTH; i++) {
-      printf("%02x", curr->hash[i]);
-    }
+    print_hash_hex((unsigned char *)curr->hash);
     printf(">, value: < %s >, next: < %p >\n", curr->value, curr->next);
     curr = curr->next;
   }
@@ -91,7 +89,10 @@ void set(char* props) {
     return;
   }
 
-  char* value = value_len_str + strlen(value_len_str) + 1;
+  // find '#' separator
+  char* value = value_len_str;
+  while (*value != '#' && *value != '\0') value++;
+  value++; // skip '#'
 
   // terminate key string
   key[HASH_LENGTH] = '\0';
@@ -112,6 +113,8 @@ void set(char* props) {
 
 const char* get(char* props) {
   // GET message format: <KEY_HASH>
+  // sanity check
+  props[HASH_LENGTH] = '\0';
   data_node_t* node_with_key = find_node_with_key(props);
 
   // not found, return NULL
