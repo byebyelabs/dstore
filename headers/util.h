@@ -13,3 +13,6 @@ void hash_string(const char *str, unsigned char *hash_out);
  * returns <0, 0, >0 like memcmp
  */
 int hash_cmp(const unsigned char *a, const unsigned char *b);
+
+// Get current time in microseconds
+unsigned long get_curr_time();
