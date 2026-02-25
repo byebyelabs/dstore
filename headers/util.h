@@ -1,4 +1,5 @@
 #pragma once
+
 #include <openssl/evp.h>
 
 #define HASH_LENGTH 16
