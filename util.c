@@ -1,6 +1,7 @@
 #include "headers/util.h"
 #include <openssl/evp.h>
 #include <string.h>
+#include <sys/time.h>
 
 void hash_string(const char *str, char *hash_out) {
   unsigned char raw_hash[RAW_HASH_LENGTH];
@@ -20,4 +21,12 @@ void hash_string(const char *str, char *hash_out) {
 
 int hash_cmp(const char *a, const char *b) {
   return strncmp(a, b, HASH_LENGTH);
+}
+
+unsigned long get_curr_time() {
+  // Citation: https://stackoverflow.com/questions/5833094/get-a-timestamp-in-c-in-microseconds
+  struct timeval tv;
+  gettimeofday(&tv,NULL);
+  unsigned long time_in_micros = 1000000 * tv.tv_sec + tv.tv_usec;
+  return time_in_micros;
 }

@@ -20,9 +20,9 @@ storage: server/storage.c util.c message.c
 	@mkdir -p out
 	${CC} ${CFLAGS} -o out/storage server/storage.c util.c message.c ${LIBS} -lpthread
 
-client: server/client.c message.c
+client: server/client.c message.c util.c
 	@mkdir -p out
-	${CC} ${CFLAGS} -o out/client test.c server/client.c message.c ${LIBS}
+	${CC} ${CFLAGS} -o out/client test.c server/client.c message.c util.c ${LIBS}
 
 spawn:
 	@make
@@ -42,3 +42,4 @@ kill:
 test:
 	@make client
 	./out/client 10000 67
+	@python3 assert_test_correctness.py

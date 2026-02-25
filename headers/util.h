@@ -1,4 +1,5 @@
 #pragma once
+
 #include <openssl/evp.h>
 
 #define HASH_LENGTH 32
@@ -15,3 +16,6 @@ void hash_string(const char *str, char *hash_out);
  * returns <0, 0, >0 like memcmp
  */
 int hash_cmp(const char *a, const char *b);
+
+// Get current time in microseconds
+unsigned long get_curr_time();
