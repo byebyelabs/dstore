@@ -63,6 +63,9 @@ data_node_t* find_node_with_key(char* key) {
 
 // container functionalities for client commands
 void set(char* props) {
+  FILE* log_file = fopen("storage_node_set_log.txt", "a");
+  fprintf(log_file, "%lu ", get_curr_time());
+
   // SET message format: <KEY_HASH><VAL_LEN>#<VAL>
   // key length is fixed at HASH_LENGTH
   char* key = props;
@@ -71,6 +74,7 @@ void set(char* props) {
   size_t value_len = atoi(value_len_str);
   if (value_len > MAX_MESSAGE_LENGTH) {
     fprintf(stderr, "%sinvalid value length: %zu; aborting\n", STORAGE_EVENTS_LOG_PREFIX, value_len);
+    fclose(log_file);
     return;
   }
 
@@ -100,13 +104,21 @@ void set(char* props) {
 
   // insert into list
   insert_data(new_data);
+  fprintf(log_file, "%lu\n", get_curr_time());
+  fclose(log_file);
 }
 
 const char* get(char* props) {
+  FILE* log_file = fopen("storage_node_get_log.txt", "a");
+  fprintf(log_file, "%lu ", get_curr_time());
+
   // GET message format: <KEY_HASH>
   // sanity check
   props[HASH_LENGTH] = '\0';
   data_node_t* node_with_key = find_node_with_key(props);
+
+  fprintf(log_file, "%lu\n", get_curr_time());
+  fclose(log_file);
 
   // not found, return NULL
   return node_with_key != NULL ? node_with_key->value : NULL;
