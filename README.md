@@ -32,7 +32,12 @@ Since we always directly store the key-value pair to the correct storage node (n
 - The test terminal will report average latency for client and storage nodes
 - To configure the test, `NUM_TESTS=x make test` to run x many tests (default is 1000)
 - We have tested with upto 10000 tests and the system scales fine (takes ~2 mins)
-- To run your own test, modify `sample_test_program.c`
+- To run your own tests:
+  - modify `sample_test_program.c`
+  - run `make spawn &`
+  - run `make sample`
+  - run `./out/sample`
+  - run `make kill`
 
 ### Client Code:
 

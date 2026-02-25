@@ -26,6 +26,10 @@ client: server/client.c message.c util.c
 	@mkdir -p out
 	${CC} ${CFLAGS} -o out/client test.c server/client.c message.c util.c ${LIBS}
 
+sample: server/client.c message.c util.c
+	@mkdir -p out
+	${CC} ${CFLAGS} -o out/sample sample_test_program.c server/client.c message.c util.c ${LIBS}
+
 spawn:
 	@make
 	@rm -f .storage_ports
