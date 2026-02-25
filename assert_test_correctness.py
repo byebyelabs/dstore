@@ -35,7 +35,7 @@ for op in ["set", "get"]:
             ttime += int(end) - int(start)
             count += 1
 
-    print(f"  avg latency for {op}: {ttime / count}ms over {count} operations")
+    print(f"  avg latency for {op}: {ttime / count}μs over {count} operations")
 
 
 # print summary stats for storage node
@@ -49,4 +49,4 @@ for op in ["set", "get"]:
             ttime += int(end) - int(start)
             count += 1
 
-    print(f" avg latency for {op}: {ttime / count}ms over {count} operations")
+    print(f" avg latency for {op}: {ttime / count}μs over {count} operations")
