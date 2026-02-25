@@ -9,9 +9,3 @@ void hash_string(const char *str, unsigned char *hash_out) {
 int hash_cmp(const unsigned char *a, const unsigned char *b) {
   return memcmp(a, b, HASH_LENGTH);
 }
-
-void print_hash_hex(unsigned char *hash) {
-  for (int i = 0; i < HASH_LENGTH; i++) {
-    printf("%02x", hash[i]);
-  }
-}

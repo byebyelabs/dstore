@@ -98,17 +98,17 @@ int main(int argc, char *argv[]) {
 
     // build storage_node_t and hash it by "host:port"
     storage_node_t *node = malloc(sizeof(storage_node_t));
-    strncpy(node->ip, host, MAX_IP_STR_LEN - 1);
-    node->ip[MAX_IP_STR_LEN - 1] = '\0';
+    strncpy(node->host, host, MAX_HOST_STR_LEN - 1);
+    node->host[MAX_HOST_STR_LEN - 1] = '\0';
     node->port = port;
 
-    char node_id[MAX_IP_STR_LEN + 8];
-    snprintf(node_id, sizeof(node_id), "%s:%d", node->ip, node->port);
+    char node_id[MAX_HOST_STR_LEN + 8];
+    snprintf(node_id, sizeof(node_id), "%s:%d", node->host, node->port);
     hash_string(node_id, node->hash);
 
     join_ring(node);
     printf("%sregistered storage node at %s:%d\n",
-           SERVER_EVENTS_LOG_PREFIX, node->ip, port);
+           SERVER_EVENTS_LOG_PREFIX, node->host, port);
   }
 
   // nodes are ready to store, now listen for client requests

@@ -61,17 +61,6 @@ data_node_t* find_node_with_key(char* key) {
   return NULL;
 }
 
-// debug function for printing lists
-void print_list() {
-  data_node_t* curr = data_head;
-  while (curr != NULL) {
-    printf("key: <");
-    print_hash_hex((unsigned char *)curr->hash);
-    printf(">, value: < %s >, next: < %p >\n", curr->value, curr->next);
-    curr = curr->next;
-  }
-}
-
 // container functionalities for client commands
 void set(char* props) {
   // SET message format: <KEY_HASH><VAL_LEN>#<VAL>

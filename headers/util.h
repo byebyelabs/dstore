@@ -13,8 +13,3 @@ void hash_string(const char *str, unsigned char *hash_out);
  * returns <0, 0, >0 like memcmp
  */
 int hash_cmp(const unsigned char *a, const unsigned char *b);
-
-/**
- * prints hash in hex format
- */
-void print_hash_hex(unsigned char *hash);
