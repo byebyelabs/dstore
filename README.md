@@ -2,6 +2,7 @@
 
 ### How to run:
 
+- Create `.env` file with variable `OPENSSL_PATH`
 - `make` to build project
 - `make spawn` to spawn 3 storage nodes and a balancer
 - In a new terminal: `make test` to run client tests
