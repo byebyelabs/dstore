@@ -41,4 +41,4 @@ kill:
 
 test:
 	@make client
-	./out/client 50 67
+	./out/client 10000 67
