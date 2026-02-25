@@ -93,6 +93,10 @@ void set(char* props) {
   strncpy(new_data->hash, key, HASH_LENGTH);
   new_data->value = copied_value;
   new_data->value_len = value_len;
+  // malloc does not guarantee zeroed out data...
+  // so sometimes find_node_with_key would assume some node had a
+  //  next pointer at some junk address when it didn't
+  new_data->next = NULL;
 
   // insert into list
   insert_data(new_data);
