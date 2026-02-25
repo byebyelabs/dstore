@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
       value = WORDS[rand() % NUM_WORDS];
 
       dset(key, value);
-      fprintf(log_file, "SET: %s -> %s\n", key, value);
+      fprintf(log_file, "%ld | SET: %s -> %s\n", time(NULL), key, value);
       break;
     
     case 1:
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
       key = WORDS[rand() % NUM_WORDS];
       
       dget(key, value_out);
-      fprintf(log_file, "GET: %s -> %s\n", key, value_out);
+      fprintf(log_file, "%ld | GET: %s -> %s\n", time(NULL), key, value_out);
       break;
 
     case 2:
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
       key = WORDS[rand() % NUM_WORDS];
 
       ddel(key);
-      fprintf(log_file, "DEL: %s\n", key);
+      fprintf(log_file, "%ld | DEL: %s\n", time(NULL), key);
       break;
     
     default:
@@ -67,8 +67,8 @@ int main(int argc, char* argv[]) {
     }
 
     // Citation: https://www.geeksforgeeks.org/c/sleep-function-in-c/
-    // without sleeping (at least 50ms), the server is overwhelmed
-    usleep(50000);
+    // without sleeping (at least 500ms), the server is overwhelmed
+    usleep(500000);
   }
 
   fclose(log_file);
