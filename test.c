@@ -67,8 +67,8 @@ int main(int argc, char* argv[]) {
     }
 
     // Citation: https://www.geeksforgeeks.org/c/sleep-function-in-c/
-    // without sleeping (at least 50ms), the server is overwhelmed
-    usleep(50000);
+    // without sleeping (at least 5ms), the server is overwhelmed
+    usleep(5000);
   }
 
   fclose(log_file);
