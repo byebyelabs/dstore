@@ -42,3 +42,4 @@ kill:
 test:
 	@make client
 	./out/client 10000 67
+	@python3 assert_test_correctness.py
