@@ -7,7 +7,7 @@
 #include "config.h"
 #include "message.h"
 #include "socket.h"
-
+#include "util.h"
 
 // only testing on a single machine
 const char *host = "localhost";
@@ -22,6 +22,8 @@ void connect_to_balancer() {;
 }
 
 void dset(char *key, char *value) {
+  FILE *log_file = fopen("set_log.txt", "a");
+  fprintf(log_file, "%lu ", get_curr_time());
   connect_to_balancer();
 
   // body is "<key> <value>"
@@ -30,9 +32,14 @@ void dset(char *key, char *value) {
   send_message(BALANCER_FD, SET, body);
 
   close(BALANCER_FD);
+  fprintf(log_file, "%lu\n", get_curr_time());
+  fclose(log_file);
 }
 
 void dget(char *key, char *value_out) {
+  FILE *log_file = fopen("get_log.txt", "a");
+  fprintf(log_file, "%lu ", get_curr_time());
+
   connect_to_balancer();
 
   if (send_message(BALANCER_FD, GET, (char *)key) != 0) {
@@ -56,6 +63,8 @@ void dget(char *key, char *value_out) {
 
   strcpy(value_out, resp->body);
   free(resp);
+  fprintf(log_file, "%lu\n", get_curr_time());
+  fclose(log_file);
 }
 
 void ddel(char *key) {
