@@ -44,7 +44,10 @@ kill:
 
 # need to || true so removing of stale logs happens
 test:
+	@make spawn &
+	@sleep 2
 	@make client
 	./out/client ${NUM_TESTS} 67
 	@python3 assert_test_correctness.py || true
 	@rm -f *_log.txt
+	@make kill
