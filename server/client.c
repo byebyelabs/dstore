@@ -22,7 +22,7 @@ void connect_to_balancer() {;
 }
 
 void dset(char *key, char *value) {
-  FILE *log_file = fopen("set_log.txt", "a");
+  FILE *log_file = fopen("client_set_log.txt", "a");
   fprintf(log_file, "%lu ", get_curr_time());
   connect_to_balancer();
 
@@ -37,7 +37,7 @@ void dset(char *key, char *value) {
 }
 
 void dget(char *key, char *value_out) {
-  FILE *log_file = fopen("get_log.txt", "a");
+  FILE *log_file = fopen("client_get_log.txt", "a");
   fprintf(log_file, "%lu ", get_curr_time());
 
   connect_to_balancer();
