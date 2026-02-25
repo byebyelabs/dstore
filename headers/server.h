@@ -11,7 +11,7 @@
 
 // Storage Node in the ring
 typedef struct storage_node {
-  unsigned char hash[HASH_LENGTH];
+  char hash[HASH_ARR_LEN];
   char host[MAX_HOST_STR_LEN];
   uint16_t port;
   struct storage_node *successor;
@@ -31,7 +31,7 @@ Returns:
   0 on success
   -1 on failure
 */
-int find_successor(unsigned char *hash, storage_node_t *result);
+int find_successor(char *hash, storage_node_t *result);
 
 /*
   Storage-facing API

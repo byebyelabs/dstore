@@ -11,7 +11,7 @@ storage_node_t *ring_head_storage_node = NULL; // head of sorted ring of storage
 pthread_mutex_t mutex_lock = PTHREAD_MUTEX_INITIALIZER;
 
 // static helper for getting successor node pointer
-static storage_node_t *_get_successor_ptr(const unsigned char *hash) {
+static storage_node_t *_get_successor_ptr(const char *hash) {
   if (ring_head_storage_node == NULL) {
     return NULL;
   }
@@ -31,7 +31,7 @@ static storage_node_t *_get_successor_ptr(const unsigned char *hash) {
 }
 
 // find storage node post hash (responsible for values on join)
-int find_successor(unsigned char *hash, storage_node_t *result) {
+int find_successor(char *hash, storage_node_t *result) {
   storage_node_t *successor_node_ptr = _get_successor_ptr(hash);
 
   if (successor_node_ptr == NULL) {
@@ -103,7 +103,7 @@ int connect_to_storage_node(storage_node_t *node) {
 // saves key-value pair to correct storage node
 int dstore_set(const char *key, const char *value) {
   // hash key to find target node
-  unsigned char key_hash[HASH_LENGTH];
+  char key_hash[HASH_ARR_LEN];
   hash_string(key, key_hash);
 
   // find target node
@@ -127,9 +127,8 @@ int dstore_set(const char *key, const char *value) {
   }
 
   // SET format: "<KEY_HASH><VAL_LEN>#<VAL>
-  unsigned char key_hash_str[HASH_LENGTH + 1];
+  char key_hash_str[HASH_ARR_LEN];
   hash_string(key, key_hash_str);
-  key_hash_str[HASH_LENGTH] = '\0';
 
   snprintf(payload, MAX_MESSAGE_LENGTH, "%s%zu#%s", key_hash_str, strlen(value), value);
   int fd = connect_to_storage_node(&target_node);
@@ -149,7 +148,7 @@ int dstore_set(const char *key, const char *value) {
 // gets key-value pair, saves value in value_buffer
 int dstore_get(const char *key, char *value_buffer) {
   // hash key to find target node
-  unsigned char key_hash[HASH_LENGTH];
+  char key_hash[HASH_ARR_LEN];
   hash_string(key, key_hash);
 
   // find target node
@@ -174,7 +173,7 @@ int dstore_get(const char *key, char *value_buffer) {
 
   // THIS IS WHAT CAUSED SEGV BRUUUHH
   // key hash was not terminated bc its raw
-  unsigned char key_hash_str[HASH_LENGTH + 1];
+  unsigned char key_hash_str[HASH_ARR_LEN];
   memcpy(key_hash_str, key_hash, HASH_LENGTH);
   key_hash_str[HASH_LENGTH] = '\0';
 
@@ -203,7 +202,7 @@ int dstore_get(const char *key, char *value_buffer) {
 // deletes key-value pair from correct storage node
 int dstore_del(const char *key) {
   // hash key to find target node
-  unsigned char key_hash[HASH_LENGTH];
+  char key_hash[HASH_ARR_LEN];
   hash_string(key, key_hash);
 
   // find target node

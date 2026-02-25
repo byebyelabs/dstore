@@ -116,7 +116,7 @@ int del(char* props) {
   // DEL message format: <KEY_HASH>
   if (data_head == NULL) return -1;
 
-  unsigned char hashed_key[HASH_LENGTH + 1] = { 0 };
+  char hashed_key[HASH_ARR_LEN] = { 0 };
   hash_string(props, hashed_key); 
 
   data_node_t* prev = NULL;

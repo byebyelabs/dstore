@@ -2,15 +2,22 @@
 #include <openssl/evp.h>
 #include <string.h>
 
-void hash_string(const char *str, unsigned char *hash_out) {
-  // Getting rid of MD5 hashing because it is too buggy for 
-  // our use case. our hash = truncate key at 16 chars and
-  // pad with ' ' to get 16 byte hash.
-  memset(hash_out, ' ', HASH_LENGTH);
-  int len = strlen(str);
-  strncpy((char *)hash_out, str, len > HASH_LENGTH ? HASH_LENGTH : len);
+void hash_string(const char *str, char *hash_out) {
+  unsigned char raw_hash[RAW_HASH_LENGTH];
+  size_t len;
+  EVP_Q_digest(NULL, "MD5", NULL, str, strlen(str), raw_hash, &len);
+
+  if (len != RAW_HASH_LENGTH) {
+    fprintf(stderr, "!!!\nhash output was too long?\n!!!\n");
+  }
+
+  // convert raw hash to full hash
+  for (int i = 0; i < RAW_HASH_LENGTH; i++) {
+    snprintf(&hash_out[i * 2], sizeof(char) * (2 + 1), "%02x", raw_hash[i]);
+  }
+  hash_out[HASH_LENGTH] = '\0';
 }
 
-int hash_cmp(const unsigned char *a, const unsigned char *b) {
-  return memcmp(a, b, HASH_LENGTH);
+int hash_cmp(const char *a, const char *b) {
+  return strncmp(a, b, HASH_LENGTH);
 }
