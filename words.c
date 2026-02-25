@@ -1,8 +1,8 @@
 // Words for testing
 // fetched from: https://github.com/powerlanguage/word-lists/blob/master/1000-most-common-words.txt
 
-const int NUM_WORDS = 464;
-char* WORDS[NUM_WORDS] = {
+const int NUM_WORDS = 170;
+char* WORDS[] = {
     "the", "of", "to", "and", "a", "in", "is", "it", "you", "that", "he", "was", "for",
     "on", "are", "with", "as", "I", "his", "they", "be", "at", "one", "have", "this",
     "from", "or", "had", "by", "word", "but", "what", "some", "we", "can", "out", "other",
@@ -17,33 +17,5 @@ char* WORDS[NUM_WORDS] = {
     "just", "form", "sentence", "great", "think", "say", "help", "low", "line", "differ",
     "turn", "cause", "much", "mean", "before", "move", "right", "boy", "old", "too", "same",
     "tell", "does", "set", "three", "want", "air", "well", "also", "play", "small", "end", "put",
-    "home", "read", "hand", "port", "large", "spell", "add", "even", "land", "here", "must",
-    "big", "high", "such", "follow", "act", "why", "ask", "men", "change", "went", "light",
-    "kind", "off", "need", "house", "picture", "try", "us", "again", "animal", "point", "mother",
-    "world", "near", "build", "self", "earth", "father", "head", "stand", "own", "page", "should",
-    "country", "found", "answer", "school", "grow", "study", "still", "learn", "plant", "cover",
-    "food", "sun", "four", "between", "state", "keep", "eye", "never", "last", "let", "tree", 
-    "thought", "farm", "city", "start", "cross", "story", "hard", "far", "might", "draw", "saw",
-    "late", "sea", "don't", "left", "press", "run", "night", "while", "life", "close", "north",
-    "real", "seem", "few", "next", "open", "children", "together", "got", "white", "example",
-    "begin", "paper", "walk", "always", "ease", "those", "group", "mark", "music", "letter",
-    "both", "mile", "often", "car", "until", "care", "river", "book", "feet", "took", "second",
-    "eat", "carry", "friend", "science", "idea", "room", "mountain", "began", "once", "fish",
-    "hear", "stop", "cut", "base", "watch", "horse", "face", "sure", "main", "color", "plain",
-    "wood", "usual", "enough", "ready", "girl", "ever", "young", "list", "above", "feel", "red",
-    "bird", "though", "body", "talk", "family", "soon", "pose", "dog", "song", "direct", "door",
-    "leave", "black", "measure", "numeral", "product", "wind", "short", "happen", "class", "ship",
-    "question", "half", "complete", "order", "area", "south", "rock", "piece", "fire", "knew",
-    "problem", "since", "told", "whole", "pass", "space", "top", "best", "king", "better", "heard",
-    "during", "hour", "five", "true", "step", "hundred", "hold", "remember", "ground", "early", 
-    "reach", "west", "verb", "interest", "listen", "fast", "table", "sing", "less", "six", 
-    "ten", "travel", "several", "morning", "toward", "simple", "lay", "vowel", "pattern",
-    "war", "center", "against", "person", "slow", "serve", "love", "road", "money", "rain",
-    "appear", "govern", "map", "cold", "rule", "voice", "pull", "power", "notice", "fine", "unit",
-    "fly", "town", "lead", "certain", "dark", "fall", "note", "cry", "plan", "machine", "star",
-    "wait", "noun", "figure", "rest", "box", "able", "field", "done", "correct", "drive", "pound",
-    "contain", "beauty", "teach", "stood", "final", "front", "green", "week", "quick", "gave",
-    "ocean", "oh", "free", "develop", "strong", "warm", "mind", "minute", "clear", "special",
-    "produce", "behind", "street", "tail", "multiply", "fact", "course", "inch", "wheel", "nothing",
-    "force", "stay", "object", "full", "surface", "blue", "moon", "decide", "foot", "deep" 
+    "home", "read", "hand", "port", "large", "spell", "add", "even", "land", "here"
 };
