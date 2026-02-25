@@ -3,4 +3,4 @@
 out
 .env
 .storage_ports
-test_log.txt
+*_log.txt
