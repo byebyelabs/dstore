@@ -25,14 +25,15 @@ Since we always directly store the key-value pair to the correct storage node (n
 - Create `.env` file with variable `OPENSSL_PATH`
 - `make` to build project
 - `make spawn` to spawn 3 storage nodes and a balancer
-- **Testing**: In a new terminal: `make test` to run client tests; takes about 2 minutes to run by default!
+- **Testing**: In a new terminal: `make test` to run client tests; takes about 15 seconds to run by default!
 - `make kill` to kill background processes (storage nodes)
 
-## Testing:
+### Testing:
 
 - See above to run our progam and test
 - The test terminal will report average latency for client and storage nodes
-- To configure the test,
+- To configure the test, `NUM_TESTS=x make test` to run x many tests (default is 1000)
+- We have tested with upto 10000 tests and the system scales fine (takes ~2 mins)
 
 ### Client Code:
 
