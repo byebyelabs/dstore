@@ -24,9 +24,7 @@ Since we always directly store the key-value pair to the correct storage node (n
 
 - Create `.env` file with variable `OPENSSL_PATH`
 - `make` to build project
-- `make spawn` to spawn 3 storage nodes and a balancer
-- **Testing**: In a new terminal: `make test` to run client tests; takes about 15 seconds to run by default!
-- `make kill` to kill background processes (storage nodes)
+- **Testing**: run `make test` to run client tests; takes about 15 seconds to run by default!
 
 ### Testing:
 
