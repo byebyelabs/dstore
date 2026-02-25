@@ -25,6 +25,7 @@ Since we always directly store the key-value pair to the correct storage node (n
 - Create `.env` file with variable `OPENSSL_PATH`
 - `make` to build project
 - **Testing**: run `make test` to run client tests; takes about 15 seconds to run by default!
+- Note: sometimes, all tests fail because 'port is taken' error; update `#define DEFAULT_BALANCER_PORT 42069` in `headers/config.h` to a different port, make again, and try again.
 
 ### Testing:
 
